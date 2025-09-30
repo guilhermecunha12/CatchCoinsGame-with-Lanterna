@@ -1,5 +1,4 @@
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -11,20 +10,20 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-    private int x = 10;
-    private int y = 10;
+    Hero hero;
 
     public Game() {
         try {
             TerminalSize terminalSize = new TerminalSize(40, 20);
-            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
-                    .setInitialTerminalSize(terminalSize);
+            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
 
             this.screen = new TerminalScreen(terminal);
             screen.setCursorPosition(null);   // we don't need a cursor
             screen.startScreen();             // screens must be started
             screen.doResizeIfNecessary();     // resize screen if necessary
+
+            this.hero = new Hero(10, 10); // inicializar o hero
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -33,7 +32,7 @@ public class Game {
 
     private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
         screen.clear();
-        screen.setCharacter(this.x, this.y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
 
@@ -57,16 +56,16 @@ public class Game {
     private void processKey(KeyStroke key) {
         switch (key.getKeyType()) {
             case KeyType.ArrowLeft:
-                this.x--;
+                hero.moveLeft();
                 break;
             case KeyType.ArrowRight:
-                this.x++;
+                hero.moveRight();
                 break;
             case KeyType.ArrowUp:
-                this.y--;
+                hero.moveUp();
                 break;
             case KeyType.ArrowDown:
-                this.y++;
+                hero.moveDown();
                 break;
         }
     }
