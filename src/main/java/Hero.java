@@ -10,8 +10,8 @@ public class Hero {
     public void setPosition(Position p) {
         this.position = p;
     }
-    public void draw(Screen screen) {
-        screen.setCharacter(this.position.getX(), this.position.getY(), TextCharacter.fromCharacter('X')[0]);
+    public Position getPosition() {
+        return this.position;
     }
     public Position moveUp() {
         return new Position(position.getX(), position.getY() - 1);

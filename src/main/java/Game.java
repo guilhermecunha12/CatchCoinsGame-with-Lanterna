@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-    Hero hero;
+    Arena arena;
 
     public Game() {
         try {
@@ -23,7 +23,7 @@ public class Game {
             screen.startScreen();             // screens must be started
             screen.doResizeIfNecessary();     // resize screen if necessary
 
-            this.hero = new Hero(new Position(10, 10)); // inicializar o hero
+            this.arena = new Arena(10, 10); // inicializar o hero
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -39,38 +39,22 @@ public class Game {
                     screen.close();
                 } else if (key.getKeyType() == KeyType.EOF) {
                     break;
+                } else {
+                    processKey(key);
                 }
-                processKey(key);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void moveHero(Position position) {
-        hero.setPosition(position);
-    }
-
     private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
     private void processKey(KeyStroke key) {
-        switch (key.getKeyType()) {
-            case KeyType.ArrowLeft:
-                moveHero(hero.moveLeft());
-                break;
-            case KeyType.ArrowRight:
-                moveHero(hero.moveRight());
-                break;
-            case KeyType.ArrowUp:
-                moveHero(hero.moveUp());
-                break;
-            case KeyType.ArrowDown:
-                moveHero(hero.moveDown());
-                break;
-        }
+        arena.processKey(key);
     }
 }
