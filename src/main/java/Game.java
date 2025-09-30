@@ -23,7 +23,7 @@ public class Game {
             screen.startScreen();             // screens must be started
             screen.doResizeIfNecessary();     // resize screen if necessary
 
-            this.hero = new Hero(10, 10); // inicializar o hero
+            this.hero = new Hero(new Position(10, 10)); // inicializar o hero
 
             } catch (IOException e) {
                 e.printStackTrace();
