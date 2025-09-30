@@ -30,12 +30,6 @@ public class Game {
             }
     }
 
-    private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
-        screen.clear();
-        hero.draw(screen);
-        screen.refresh();
-    }
-
     public void run() {
         try {
             while (true) {
@@ -53,19 +47,29 @@ public class Game {
         }
     }
 
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
+    private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
+        screen.clear();
+        hero.draw(screen);
+        screen.refresh();
+    }
+
     private void processKey(KeyStroke key) {
         switch (key.getKeyType()) {
             case KeyType.ArrowLeft:
-                hero.moveLeft();
+                moveHero(hero.moveLeft());
                 break;
             case KeyType.ArrowRight:
-                hero.moveRight();
+                moveHero(hero.moveRight());
                 break;
             case KeyType.ArrowUp:
-                hero.moveUp();
+                moveHero(hero.moveUp());
                 break;
             case KeyType.ArrowDown:
-                hero.moveDown();
+                moveHero(hero.moveDown());
                 break;
         }
     }
