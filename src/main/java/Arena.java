@@ -1,7 +1,9 @@
-import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.screen.Screen;
 
 public class Arena {
     int width;
@@ -11,11 +13,18 @@ public class Arena {
     public Arena(int w, int h) {
         this.width = w;
         this.height = h;
-        this.hero = new Hero(new Position(0, 0));
+        this.hero = new Hero(new Position(5, 5)); // initialise a hero in the middle of the arena
     }
 
-    public void draw(Screen screen) {
-        screen.setCharacter(hero.getPosition().getX(), hero.getPosition().getY(), TextCharacter.fromCharacter('X')[0]);
+    public void draw(TextGraphics graphics) {
+        // Paint the arena:
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width + 1, height + 1), ' ');
+        /* To paint a bigger arena:
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
+         */
+        // Draw the hero (must be after painting the arena to be on top):
+        hero.draw(graphics);
     }
 
     private boolean canHeroMove(Position position) {

@@ -30,6 +30,16 @@ public class Game {
             }
     }
 
+    private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
+        screen.clear();
+        arena.draw(screen.newTextGraphics());
+        screen.refresh();
+    }
+
+    private void processKey(KeyStroke key) {
+        arena.processKey(key);
+    }
+
     public void run() {
         try {
             while (true) {
@@ -46,15 +56,5 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
-        screen.clear();
-        arena.draw(screen);
-        screen.refresh();
-    }
-
-    private void processKey(KeyStroke key) {
-        arena.processKey(key);
     }
 }
