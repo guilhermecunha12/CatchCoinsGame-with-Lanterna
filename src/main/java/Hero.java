@@ -18,7 +18,7 @@ public class Hero {
     }
 
     public void draw(TextGraphics graphics) {
-        // Criar o hero no terminal e torná-lo bold:
+        // Create the hero in the terminal and make it bold:
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
