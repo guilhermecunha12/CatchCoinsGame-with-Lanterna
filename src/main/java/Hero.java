@@ -2,21 +2,13 @@ import com.googlecode.lanterna.*;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import java.awt.*;
 
-public class Hero {
-    private Position position;
+public class Hero extends Element {
 
     public Hero(Position p) {
-        this.position = p;
+        super(p);
     }
 
-    public void setPosition(Position p) {
-        this.position = p;
-    }
-
-    public Position getPosition() {
-        return this.position;
-    }
-
+    @Override
     public void draw(TextGraphics graphics) {
         // Create the hero in the terminal and make it bold:
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699")); // to match the color of the arena
