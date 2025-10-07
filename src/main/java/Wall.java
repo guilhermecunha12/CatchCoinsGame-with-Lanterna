@@ -10,11 +10,8 @@ public class Wall {
         this.position = new Position(x, y);
     }
 
-    int getX() {
-        return position.getX();
-    }
-    int getY() {
-        return position.getY();
+    public Position getPosition() {
+        return position;
     }
 
     public void draw(TextGraphics graphics) {
