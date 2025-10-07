@@ -4,23 +4,21 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Wall {
-    private final int x;
-    private final int y;
+    private final Position position;
 
     Wall(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.position = new Position(x, y);
     }
 
-    int  getX() {
-        return x;
+    int getX() {
+        return position.getX();
     }
     int getY() {
-        return y;
+        return position.getY();
     }
 
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#A52A2A"));
-        graphics.fillRectangle(new TerminalPosition(x, y), new TerminalSize(1, 1), ' ');
+        graphics.fillRectangle(new TerminalPosition(position.getX(), position.getY()), new TerminalSize(1, 1), ' ');
     }
 }
