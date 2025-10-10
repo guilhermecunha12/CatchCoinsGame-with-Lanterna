@@ -14,6 +14,8 @@ public class Arena {
     private final Hero hero;
     private final List<Wall> walls;
     private final List<Coin> coins;
+    private final List<Monster> monsters;
+    public boolean isGameOver = false;
 
     public Arena(int w, int h) {
         this.width = w;
@@ -21,6 +23,7 @@ public class Arena {
         this.hero = new Hero(width/2, height/2); // initialise a hero in the middle of the arena
         this.walls = createWalls(); // create the walls of the arena
         this.coins = createCoins(10); // create the coins of the arena
+        this.monsters = createMonsters(5); // create the monsters of the arena
     }
 
     private List<Wall> createWalls() { // create surrounding walls
@@ -49,7 +52,7 @@ public class Arena {
             int randomY = random.nextInt(height - 2) + 1;
 
             // while the position is invalid
-            while (!isValidCoinPosition(new Position(randomX, randomY), coins)) {
+            while (!isValidPosition(new Position(randomX, randomY), coins)) {
                 randomX = random.nextInt(width - 2) + 1;
                 randomY = random.nextInt(height - 2) + 1;
             }
@@ -57,6 +60,24 @@ public class Arena {
         }
         return coins;
     }
+
+    private List<Monster> createMonsters(int n) {
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int randomX = random.nextInt(width - 2) + 1;
+            int randomY = random.nextInt(height - 2) + 1;
+
+            // while the position is invalid
+            while (!isValidPosition(new Position(randomX, randomY), monsters)) {
+                randomX = random.nextInt(width - 2) + 1;
+                randomY = random.nextInt(height - 2) + 1;
+            }
+            monsters.add(new Monster(randomX, randomY));
+        }
+        return monsters;
+    }
+
 
     public void draw(TextGraphics graphics) {
         // Paint the arena:
@@ -70,12 +91,21 @@ public class Arena {
         /* To paint a bigger arena:
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
          */
+
         // Draw the hero (must be after painting the arena to be on top):
         hero.draw(graphics);
 
         // Draw the coins
         for (Coin coin : coins) {
             coin.draw(graphics);
+        }
+
+        drawMonsters(graphics);
+    }
+
+    public void drawMonsters(TextGraphics graphics) {
+        for (Monster monster : monsters) {
+            monster.draw(graphics);
         }
     }
 
@@ -89,16 +119,18 @@ public class Arena {
         }
     }
 
-    private boolean isValidCoinPosition(Position position, ArrayList<Coin> coins) {
-        // Verify if the new position of the coin is another coin
-        for (Coin coin : coins) {
-            if (coin.getPosition().equals(position)) return false;
+    // ArrayList<? extends Element> means "a list of some type that is Element or any subclass of Element"
+    // ? é uma wildcard que representa um tipo desconhecido
+    private boolean isValidPosition(Position position, ArrayList<? extends Element> list) {
+        // Verify if the new position of the element is another coin
+        for (Element e : list) {
+            if (e.getPosition().equals(position)) return false;
         }
-        // Verify if the new position of the coin is the hero's
+        // Verify if the new position of the element is the hero's
         return !position.equals(hero.getPosition());
     }
 
-    private boolean canHeroMove(Position position) {
+    private boolean canMove(Position position) {
         // Check if the position is a wall
         for (Wall wall : walls) {
             if (wall.getPosition().equals(position)) return false;
@@ -108,11 +140,34 @@ public class Arena {
     }
 
     private void moveHero(Position position) {
-        if (canHeroMove(position)) {
+        if (canMove(position)) {
             hero.setPosition(position);
             retrieveCoins(); // see if the hero grabbed a coin
+            verifyMonsterCollisions(); // to see if the hero touches a monster
         }
     }
+
+    private void moveMonsters() {
+        for (Monster monster : monsters) {
+            Position nextPosition = monster.move();
+            // until the monster can move in to a valid position
+            while (!canMove(nextPosition)) nextPosition = monster.move();
+
+            monster.setPosition(nextPosition);
+            verifyMonsterCollisions(); // to see if the hero touches a monster
+        }
+    }
+
+    private void verifyMonsterCollisions() {
+        Position heroPosition = hero.getPosition();
+        for (Monster monster : monsters) {
+            if (monster.getPosition().equals(heroPosition)) {
+                isGameOver = true;
+                break;
+            }
+        }
+    }
+
 
     public void processKey(KeyStroke key) {
         System.out.println(key); // print the key stroke
@@ -133,5 +188,6 @@ public class Arena {
             default: // just ignore
                 break;
         }
+        moveMonsters();
     }
 }

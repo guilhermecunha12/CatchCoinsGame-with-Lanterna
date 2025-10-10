@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-    Arena arena;
+    private Arena arena;
 
     public Game() {
         try {
@@ -44,13 +44,33 @@ public class Game {
         try {
             while (true) {
                 draw();
+
+                /*
+                Thread monsterThread = new Thread() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            arena.drawMonsters();
+                            arena.moveMonsters();
+
+                        }
+                    }
+                };
+                */
+
+
                 KeyStroke key = screen.readInput();
                 if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
                     screen.close();
-                } else if (key.getKeyType() == KeyType.EOF) {
+                } else if (key.getKeyType() == KeyType.EOF) { // when does EOF gets inputted?
                     break;
                 } else {
                     processKey(key);
+                }
+
+                if (arena.isGameOver) {
+                    System.out.println("GAME OVER");
+                    screen.close();
                 }
             }
         } catch (IOException e) {
