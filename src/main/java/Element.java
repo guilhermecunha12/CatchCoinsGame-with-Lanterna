@@ -3,8 +3,8 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 public abstract class Element {
      protected Position position;
 
-     public Element(Position p) {
-         this.position = p;
+     public Element(int x, int y) {
+         this.position = new Position(x, y);
      }
 
     public Position getPosition() {

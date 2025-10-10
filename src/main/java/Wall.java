@@ -5,8 +5,8 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Wall extends Element {
 
-    public Wall(Position p) {
-        super(p);
+    public Wall(int x, int y) {
+        super(x, y);
     }
 
     @Override

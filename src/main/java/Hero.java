@@ -4,15 +4,15 @@ import java.awt.*;
 
 public class Hero extends Element {
 
-    public Hero(Position p) {
-        super(p);
+    public Hero(int x, int y) {
+        super(x, y);
     }
 
     @Override
     public void draw(TextGraphics graphics) {
         // Create the hero in the terminal and make it bold:
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699")); // to match the color of the arena
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#000000")); // hero will be black
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
 

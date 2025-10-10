@@ -14,7 +14,7 @@ public class Game {
 
     public Game() {
         try {
-            TerminalSize terminalSize = new TerminalSize(40, 20);
+            TerminalSize terminalSize = new TerminalSize(50, 50);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
 
@@ -23,7 +23,7 @@ public class Game {
             screen.startScreen();             // screens must be started
             screen.doResizeIfNecessary();     // resize screen if necessary
 
-            this.arena = new Arena(10, 10); // inicializar a arena
+            this.arena = new Arena(40, 40); // inicializar a arena
 
             } catch (IOException e) {
                 e.printStackTrace();
