@@ -7,7 +7,6 @@ import com.googlecode.lanterna.input.KeyType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Arena {
     int width;
@@ -57,7 +56,7 @@ public class Arena {
             int randomY = random.nextInt(height - 2) + 1;
 
             // while the position is invalid
-            while (!isValidPosition(new Position(randomX, randomY), coins)) {
+            while (isInvalidPosition(new Position(randomX, randomY), coins)) {
                 randomX = random.nextInt(width - 2) + 1;
                 randomY = random.nextInt(height - 2) + 1;
             }
@@ -74,7 +73,7 @@ public class Arena {
             int randomY = random.nextInt(height - 2) + 1;
 
             // while the position is invalid
-            while (!isValidPosition(new Position(randomX, randomY), monsters)) {
+            while (isInvalidPosition(new Position(randomX, randomY), monsters)) {
                 randomX = random.nextInt(width - 2) + 1;
                 randomY = random.nextInt(height - 2) + 1;
             }
@@ -108,6 +107,7 @@ public class Arena {
             coin.draw(graphics);
         }
 
+        // Draw the monsters after the coins get drawn to make them on top
         drawMonsters(graphics);
     }
 
@@ -122,6 +122,7 @@ public class Arena {
         for (Coin coin : coins) {
             if (coin.getPosition().equals(heroPosition)) {
                 coins.remove(coin);
+                System.out.println("Grabbed a coin!");
                 hero.speedIncrement();
                 break; // found the coin to remove
             }
@@ -131,13 +132,13 @@ public class Arena {
 
     // ArrayList<? extends Element> means "a list of some type that is Element or any subclass of Element"
     // ? é uma wildcard que representa um tipo desconhecido
-    private boolean isValidPosition(Position position, ArrayList<? extends Element> list) {
+    private boolean isInvalidPosition(Position position, ArrayList<? extends Element> list) {
         // Verify if the new position of the element is another coin
         for (Element e : list) {
-            if (e.getPosition().equals(position)) return false;
+            if (e.getPosition().equals(position)) return true;
         }
         // Verify if the new position of the element is the hero's
-        return !position.equals(hero.getPosition());
+        return position.equals(hero.getPosition());
     }
 
     private boolean canHeroMove(Position position) {

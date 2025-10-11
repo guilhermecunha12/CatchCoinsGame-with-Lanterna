@@ -5,14 +5,22 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Game {
     private Screen screen;
     private Arena arena;
+    private PrintWriter game_moves;
 
     public Game(int arenaW, int arenaH, int numberCoins, int numberMonster) {
         try {
+
+            game_moves = new PrintWriter(new PrintWriter("game_moves.txt"), true);
+
             TerminalSize terminalSize = new TerminalSize(arenaW, arenaH);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
@@ -79,7 +87,7 @@ public class Game {
             monsterThread.start();
             KeyStroke key = screen.readInput(); // read first input
             arena.firstInput(); // to make the hero not immune
-            System.out.println(key); // print the keystroke
+            game_moves.println(key);
 
             while (true) {
                 if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
@@ -121,19 +129,20 @@ public class Game {
 
                     if (pollInput != null) {
                         key = pollInput;
-                        System.out.println(key); // print the keystroke
+                        game_moves.println(key);
                     }
                 }
             }
-            // interrupt the other threads
-            drawThread.interrupt();
-            monsterThread.interrupt();
 
         } catch (IOException | InterruptedException e) {
-            // interrupt the other threads
+            e.printStackTrace();
+
+        } finally {
+            // interrupt the other threads and streams
             drawThread.interrupt();
             monsterThread.interrupt();
-            e.printStackTrace();
+            game_moves.close();
+
         }
     }
 }

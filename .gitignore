@@ -46,3 +46,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# loggers
+game_moves.txt
