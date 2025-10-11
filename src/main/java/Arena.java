@@ -7,6 +7,7 @@ import com.googlecode.lanterna.input.KeyType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Arena {
     int width;
@@ -15,15 +16,19 @@ public class Arena {
     private final List<Wall> walls;
     private final List<Coin> coins;
     private final List<Monster> monsters;
-    public boolean isGameOver = false;
+    // GameOver:
+    // 0 -> not over
+    // 1 -> hero collected all coins
+    // 2 -> hero killed by monsters
+    public int isGameOver = 0;
 
-    public Arena(int w, int h) {
+    public Arena(int w, int h, int nC, int nM) {
         this.width = w;
         this.height = h;
         this.hero = new Hero(width/2, height/2); // initialise a hero in the middle of the arena
         this.walls = createWalls(); // create the walls of the arena
-        this.coins = createCoins(10); // create the coins of the arena
-        this.monsters = createMonsters(5); // create the monsters of the arena
+        this.coins = createCoins(nC); // create the coins of the arena
+        this.monsters = createMonsters(nM); // create the monsters of the arena
     }
 
     private List<Wall> createWalls() { // create surrounding walls
@@ -88,6 +93,9 @@ public class Arena {
         for (Wall wall : walls)
             wall.draw(graphics);
 
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF00")); // set text color
+        graphics.putString(new TerminalPosition(0, 0), "COINS REMAINING: " + coins.size());
+
         /* To paint a bigger arena:
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
          */
@@ -114,9 +122,11 @@ public class Arena {
         for (Coin coin : coins) {
             if (coin.getPosition().equals(heroPosition)) {
                 coins.remove(coin);
+                hero.speedIncrement();
                 break; // found the coin to remove
             }
         }
+        if (coins.isEmpty()) isGameOver = 1;
     }
 
     // ArrayList<? extends Element> means "a list of some type that is Element or any subclass of Element"
@@ -168,7 +178,7 @@ public class Arena {
             while (!canMonsterMove(nextPosition)) nextPosition = monster.move();
 
             monster.setPosition(nextPosition);
-            verifyMonsterCollisions(); // to see if the hero touches a monster
+            if (!hero.isImmune()) verifyMonsterCollisions(); // to see if the hero touches a monster
         }
     }
 
@@ -176,15 +186,21 @@ public class Arena {
         Position heroPosition = hero.getPosition();
         for (Monster monster : monsters) {
             if (monster.getPosition().equals(heroPosition)) {
-                isGameOver = true;
+                isGameOver = 2;
                 break;
             }
         }
     }
 
+    public void firstInput() { // to make hero not immune after first input in Game class
+        hero.moved();
+    }
+
+    public int currentHeroSpeed() {
+        return hero.getSpeed();
+    }
 
     public void processKey(KeyStroke key) {
-
         switch (key.getKeyType()) {
             case KeyType.ArrowLeft:
                 moveHero(hero.moveLeft());

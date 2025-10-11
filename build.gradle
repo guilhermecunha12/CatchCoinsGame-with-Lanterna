@@ -7,6 +7,10 @@ application {
     mainClass.set("Application")
 }
 
+run {
+    standardInput = System.in
+}
+
 group = 'com.guilhermecunha.hero'
 version = '1.0-SNAPSHOT'
 

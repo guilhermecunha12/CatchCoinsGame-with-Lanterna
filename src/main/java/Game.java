@@ -1,21 +1,19 @@
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-
 import java.io.IOException;
 
 public class Game {
     private Screen screen;
     private Arena arena;
 
-    public Game() {
+    public Game(int arenaW, int arenaH, int numberCoins, int numberMonster) {
         try {
-            TerminalSize terminalSize = new TerminalSize(40, 20);
+            TerminalSize terminalSize = new TerminalSize(arenaW, arenaH);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
 
@@ -24,14 +22,16 @@ public class Game {
             screen.startScreen();             // screens must be started
             screen.doResizeIfNecessary();     // resize screen if necessary
 
-            this.arena = new Arena(40, 20); // inicializar a arena
+            // create the arena, according to the difficulty chosen
+            this.arena = new Arena(arenaW, arenaH, numberCoins, numberMonster);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
     }
 
-    private void draw() throws IOException { // o method draw, caso falhe, lança uma exceção para a function call chain
+    // if this method fails, it throws an exception to the function call chain
+    private void draw() throws IOException {
         screen.clear();
         arena.draw(screen.newTextGraphics());
         screen.refresh();
@@ -41,7 +41,7 @@ public class Game {
         arena.processKey(key);
     }
 
-    public void run() {
+    public void run(int monsterSpeed) {
 
         Thread monsterThread = new Thread() {
             @Override
@@ -49,7 +49,7 @@ public class Game {
                 while (!isInterrupted()) {
                     try {
                         arena.moveMonsters();
-                        Thread.sleep(500); // monsters move every 500ms
+                        Thread.sleep(monsterSpeed); // monsters move every 500ms
                     } catch (InterruptedException e) {
                         break;
                     }
@@ -78,16 +78,31 @@ public class Game {
             drawThread.start();
             monsterThread.start();
             KeyStroke key = screen.readInput(); // read first input
-            System.out.println(key); // print the key stroke
+            arena.firstInput(); // to make the hero not immune
+            System.out.println(key); // print the keystroke
 
             while (true) {
                 if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
+                    System.out.println("\n================");
                     System.out.println("GAME INTERRUPTED");
+                    System.out.println("================");
                     screen.close();
                     break;
 
-                } else if (arena.isGameOver) {
-                    System.out.println("GAME OVER");
+                } else if (arena.isGameOver != 0) {
+                    System.out.println("\n===========================");
+
+                    switch (arena.isGameOver) {
+                        case 1:
+                            System.out.println("YOU COLLECTED ALL COINS!");
+                            System.out.println("YOU WIN!");
+                            break;
+                        case 2:
+                            System.out.println("YOU GOT KILLED BY MONSTERS.");
+                            System.out.println("GAME OVER");
+                            break;
+                    }
+                    System.out.println("===========================");
                     screen.close();
                     break;
 
@@ -99,14 +114,14 @@ public class Game {
                     KeyStroke pollInput = screen.pollInput();
                     while (pollInput == null) {
                         processKey(key);
-                        if (arena.isGameOver) break;
-                        Thread.sleep(300);
+                        if (arena.isGameOver != 0) break;
+                        Thread.sleep(arena.currentHeroSpeed()); // the hero speed increases as it grabs coins
                         pollInput = screen.pollInput();
                     }
 
                     if (pollInput != null) {
                         key = pollInput;
-                        System.out.println(key); // print the key stroke
+                        System.out.println(key); // print the keystroke
                     }
                 }
             }

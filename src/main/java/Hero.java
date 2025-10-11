@@ -3,16 +3,40 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import java.awt.*;
 
 public class Hero extends Element {
+    private int speed = 300;
+    private boolean immune = true;
 
     public Hero(int x, int y) {
         super(x, y);
     }
 
+    public boolean isImmune() {
+        return immune;
+    }
+
+    public void moved() {
+        this.immune = false;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void speedIncrement() {
+        // cannot get faster than this
+        if (speed > 100) speed -= 20;
+    }
+
     @Override
     public void draw(TextGraphics graphics) {
+
         // Create the hero in the terminal and make it bold:
+
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699")); // to match the color of the arena
-        graphics.setForegroundColor(TextColor.Factory.fromString("#000000")); // hero will be black
+
+        if (!immune) graphics.setForegroundColor(TextColor.Factory.fromString("#000000")); // hero will be black
+        else graphics.setForegroundColor(TextColor.Factory.fromString("#808080"));
+
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
 
