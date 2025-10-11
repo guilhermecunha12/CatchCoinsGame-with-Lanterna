@@ -124,7 +124,6 @@ public class Application {
             String line = br.readLine();
             while (line != null) {
                 String[] fields = line.split(",");
-                int j = Integer.parseInt(fields[0]);
                 switch (Integer.parseInt(fields[0])) {
                     default:
                     case 1:
