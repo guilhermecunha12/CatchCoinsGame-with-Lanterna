@@ -5,21 +5,17 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class Game {
     private Screen screen;
     private Arena arena;
     private PrintWriter game_moves;
 
+
     public Game(int arenaW, int arenaH, int numberCoins, int numberMonster) {
         try {
-
-            game_moves = new PrintWriter(new PrintWriter("game_moves.txt"), true);
+            game_moves = new PrintWriter(new PrintWriter(new File("last_game_moves.txt")), true);
 
             TerminalSize terminalSize = new TerminalSize(arenaW, arenaH);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
@@ -49,7 +45,8 @@ public class Game {
         arena.processKey(key);
     }
 
-    public void run(int monsterSpeed) {
+    // run method returns 0 if the player lost or 1 if the player won
+    public int run(int monsterSpeed) {
 
         Thread monsterThread = new Thread() {
             @Override
@@ -142,7 +139,9 @@ public class Game {
             drawThread.interrupt();
             monsterThread.interrupt();
             game_moves.close();
-
         }
+
+        if (arena.isGameOver == 1) return 1;
+        else return 0;
     }
 }
