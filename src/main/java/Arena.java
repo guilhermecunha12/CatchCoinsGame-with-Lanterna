@@ -130,7 +130,7 @@ public class Arena {
         return !position.equals(hero.getPosition());
     }
 
-    private boolean canMove(Position position) {
+    private boolean canHeroMove(Position position) {
         // Check if the position is a wall
         for (Wall wall : walls) {
             if (wall.getPosition().equals(position)) return false;
@@ -139,19 +139,33 @@ public class Arena {
         return (position.getX() >= 0 && position.getX() < width && position.getY() >= 0 && position.getY() < height);
     }
 
+    private boolean canMonsterMove(Position position) {
+        // if the hero can't move to that position so do the monster
+        if (!canHeroMove(position)) return false;
+
+        // Check if the position is one of the other monsters'
+        for (Monster monster: monsters) {
+            if (monster.getPosition().equals(position)) return false;
+        }
+
+        return true;
+    }
+
+
     private void moveHero(Position position) {
-        if (canMove(position)) {
+        if (canHeroMove(position)) {
             hero.setPosition(position);
             retrieveCoins(); // see if the hero grabbed a coin
             verifyMonsterCollisions(); // to see if the hero touches a monster
         }
     }
 
-    private void moveMonsters() {
+    public void moveMonsters() {
         for (Monster monster : monsters) {
             Position nextPosition = monster.move();
-            // until the monster can move in to a valid position
-            while (!canMove(nextPosition)) nextPosition = monster.move();
+
+            // until the monster can't move to a valid position
+            while (!canMonsterMove(nextPosition)) nextPosition = monster.move();
 
             monster.setPosition(nextPosition);
             verifyMonsterCollisions(); // to see if the hero touches a monster
@@ -170,7 +184,6 @@ public class Arena {
 
 
     public void processKey(KeyStroke key) {
-        System.out.println(key); // print the key stroke
 
         switch (key.getKeyType()) {
             case KeyType.ArrowLeft:
@@ -188,6 +201,5 @@ public class Arena {
             default: // just ignore
                 break;
         }
-        moveMonsters();
     }
 }

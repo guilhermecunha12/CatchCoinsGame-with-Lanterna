@@ -17,7 +17,9 @@ public class Monster extends Element {
     }
 
     public Position move() {
-        Position next = this.position;
+        // can not do Position next = this.position because both variables would point to the
+        // exact same object in memory (objects are passed through references to the heap)
+        Position next = new Position(this.position.getX(), this.position.getY());
         Random random = new Random();
         int d = random.nextInt(2) < 0.5 ? -1 : 1;
         int axis = random.nextInt(2);
