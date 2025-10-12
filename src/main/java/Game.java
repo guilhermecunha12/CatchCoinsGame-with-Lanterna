@@ -62,6 +62,9 @@ public class Game {
             }
         };
 
+        // tried to call method draw() immediately after monster and hero moves, which made two threads
+        // (main thread and monsterThread) call this method interchangeably. This made the game glitchy,
+        // so there was the need to create another thread for drawing the game every x milliseconds.
         Thread drawThread = new Thread() {
             @Override
             public void run() {
