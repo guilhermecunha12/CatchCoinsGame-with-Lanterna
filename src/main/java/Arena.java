@@ -92,8 +92,10 @@ public class Arena {
         for (Wall wall : walls)
             wall.draw(graphics);
 
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF00")); // set text color
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF00")); // yellow
         graphics.putString(new TerminalPosition(0, 0), "COINS REMAINING: " + coins.size());
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF")); // white
+        graphics.putString(new TerminalPosition(width - 16, 0), "PRESS q TO EXIT");
 
         /* To paint a bigger arena:
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
@@ -131,7 +133,7 @@ public class Arena {
     }
 
     // ArrayList<? extends Element> means "a list of some type that is Element or any subclass of Element"
-    // ? é uma wildcard que representa um tipo desconhecido
+    // ? is a wildcard that represents an unknown type
     private boolean isInvalidPosition(Position position, ArrayList<? extends Element> list) {
         // Verify if the new position of the element is another coin
         for (Element e : list) {

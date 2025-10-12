@@ -84,7 +84,7 @@ public class Game {
             monsterThread.start();
             KeyStroke key = screen.readInput(); // read first input
             arena.firstInput(); // to make the hero not immune
-            game_moves.println(key);
+            game_moves.println(key); // write the move to the file game_moves
 
             while (true) {
                 if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
@@ -125,7 +125,9 @@ public class Game {
                     }
 
                     if (pollInput != null) {
+                        processKey(pollInput); // process the key immediately...
                         key = pollInput;
+                        Thread.sleep(arena.currentHeroSpeed()); // ...and wait to match hero's speed
                         game_moves.println(key);
                     }
                 }
