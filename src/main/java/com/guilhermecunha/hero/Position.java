@@ -1,3 +1,5 @@
+package com.guilhermecunha.hero;
+
 public class Position {
     private int x;
     private int y;

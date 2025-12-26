@@ -1,3 +1,5 @@
+package com.guilhermecunha.hero;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ public class Application {
                 System.out.println("Hard mode chosen.");
                 break;
             case 4:
-                arenaW = 30; arenaH = 15; numberCoins = 12; numberMonster = 12; monsterSpeed = 150;
+                arenaW = 40; arenaH = 20; numberCoins = 12; numberMonster = 16; monsterSpeed = 150;
                 System.out.println("Impossible mode chosen.");
                 break;
             case 5:
