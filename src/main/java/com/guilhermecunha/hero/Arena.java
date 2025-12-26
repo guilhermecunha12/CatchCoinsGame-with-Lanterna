@@ -1,3 +1,5 @@
+package com.guilhermecunha.hero;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -42,8 +44,8 @@ public class Arena {
             walls.add(new Wall(width - 1, r));
         }
         /* to test random walls placed in the arena
-        walls.add(new Wall(4, 4));
-        walls.add(new Wall(6, 6));
+        walls.add(new com.guilhermecunha.hero.Wall(4, 4));
+        walls.add(new com.guilhermecunha.hero.Wall(6, 6));
         */
         return walls;
     }
@@ -132,7 +134,7 @@ public class Arena {
         if (coins.isEmpty()) isGameOver = 1;
     }
 
-    // ArrayList<? extends Element> means "a list of some type that is Element or any subclass of Element"
+    // ArrayList<? extends com.guilhermecunha.hero.Element> means "a list of some type that is com.guilhermecunha.hero.Element or any subclass of com.guilhermecunha.hero.Element"
     // ? is a wildcard that represents an unknown type
     private boolean isInvalidPosition(Position position, ArrayList<? extends Element> list) {
         // Verify if the new position of the element is another coin
@@ -195,7 +197,7 @@ public class Arena {
         }
     }
 
-    public void firstInput() { // to make hero not immune after first input in Game class
+    public void firstInput() { // to make hero not immune after first input in com.guilhermecunha.hero.Game class
         hero.moved();
     }
 

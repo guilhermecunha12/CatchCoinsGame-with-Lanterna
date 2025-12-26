@@ -1,3 +1,5 @@
+package com.guilhermecunha.hero;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public abstract class Element {

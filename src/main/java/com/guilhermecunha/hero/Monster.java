@@ -1,3 +1,5 @@
+package com.guilhermecunha.hero;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -16,7 +18,7 @@ public class Monster extends Element {
     }
 
     public Position move() {
-        // can not do Position next = this.position because both variables would point to the
+        // can not do com.guilhermecunha.hero.Position next = this.position because both variables would point to the
         // exact same object in memory (objects are passed through references to the heap)
         Position next = new Position(this.position.getX(), this.position.getY());
         Random random = new Random();

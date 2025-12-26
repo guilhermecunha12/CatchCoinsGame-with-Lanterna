@@ -1,6 +1,7 @@
+package com.guilhermecunha.hero;
+
 import com.googlecode.lanterna.*;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import java.awt.*;
 
 public class Hero extends Element {
     private int speed = 300;
